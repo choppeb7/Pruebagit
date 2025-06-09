@@ -1,0 +1,52 @@
+##############################################################
+# CONFIGURAR GITHUB CON SSH DESDE POWERSHELL
+# Autor: Christian Hoppe (choppeb7)
+# Repositorio: Pruebagit
+##############################################################
+
+# 1. GENERAR UNA NUEVA CLAVE SSH (PRESIONA ENTER para aceptar ruta por defecto)
+ssh-keygen -t rsa -b 4096 -C "tu_correo@ejemplo.com"
+
+# 2. INICIAR EL SERVICIO SSH-AGENT
+Start-Service ssh-agent
+
+# (Si da error por permisos, usar:)
+Get-Service ssh-agent | Set-Service -StartupType Manual
+Start-Service ssh-agent
+
+# 3. AGREGAR LA CLAVE PRIVADA AL AGENTE
+ssh-add C:\Users\CHOPPE\.ssh\id_rsa
+
+# 4. COPIAR CLAVE PÚBLICA AL PORTAPAPELES
+Get-Content C:\Users\CHOPPE\.ssh\id_rsa.pub | Set-Clipboard
+
+# 5. PEGAR LA CLAVE EN GITHUB
+# Ir a: https://github.com/settings/keys
+# Hacer clic en "New SSH key", nombrarla y pegar el contenido copiado
+
+# 6. OPCIONAL: CONFIGURAR ARCHIVO SSH
+notepad C:\Users\CHOPPE\.ssh\config
+
+# AGREGAR EL SIGUIENTE CONTENIDO AL ARCHIVO CONFIG:
+# ----------------------
+# Host github.com
+#   HostName github.com
+#   User git
+#   IdentityFile C:\Users\CHOPPE\.ssh\id_rsa
+#   IdentitiesOnly yes
+# ----------------------
+
+# 7. PROBAR LA CONEXIÓN SSH
+ssh -T git@github.com
+
+# 8. CLONAR TU REPOSITORIO (REEMPLAZA SI CAMBIA NOMBRE)
+git clone git@github.com:choppeb7/Pruebagit.git
+
+# 9. ENTRAR A LA CARPETA DEL PROYECTO
+cd .\Pruebagit
+
+# 10. VERIFICAR QUE ESTÁS CONECTADO CON SSH
+git remote -v
+
+# FIN
+##############################################################
